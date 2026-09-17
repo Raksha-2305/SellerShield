@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SellerShield Payment</title>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #eef2ff, #f8f9ff);
+            padding: 20px;
+        }
+
+        .payment-card {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border-radius: 22px;
+            padding: 35px 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+            text-align: center;
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 18px;
+            border-radius: 18px;
+            background: #4f46e5;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 28px;
+        }
+
+        .amount-box {
+            background: #f5f7ff;
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 25px;
+        }
+
+        .amount-label {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .amount {
+            font-size: 34px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .pay-button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: #4f46e5;
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .pay-button:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+        }
+
+        .pay-button:active {
+            transform: translateY(0);
+        }
+
+        .secure {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .secure span {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .order-info {
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="payment-card">
+
+    <div class="logo">S</div>
+
+    <div class="title">SellerShield</div>
+
+    <div class="subtitle">
+        Secure payment for your order
+    </div>
+
+    <div class="amount-box">
+        <div class="amount-label">Amount to Pay</div>
+        <div class="amount">
+            ₹<span id="amount">0</span>
+        </div>
+    </div>
+
+    <button class="pay-button" onclick="payNow()">
+        Pay Now
+    </button>
+
+    <div class="secure">
+        🔒 <span>Secure Payment</span> powered by Razorpay
+    </div>
+
+    <div class="order-info">
+        Your payment is securely processed through Razorpay.
+    </div>
+
+</div>
+
+<script>
+
+    const params = new URLSearchParams(window.location.search);
+
+    const orderId = params.get("orderId");
+    const amount = params.get("amount");
+
+    document.getElementById("amount").textContent = amount;
+
+
+    function payNow() {
+
+        const options = {
+            key: "rzp_test_TPj1Gm1RBUC0E1",
+            amount: Number(amount) * 100,
+            currency: "INR",
+            name: "SellerShield",
+            description: "Order Payment",
+            order_id: orderId,
+
+            handler: function (response) {
+
+                console.log("Payment ID:", response.razorpay_payment_id);
+                console.log("Order ID:", response.razorpay_order_id);
+                console.log("Signature:", response.razorpay_signature);
+
+                alert("Payment successful!");
+            },
+
+            modal: {
+                ondismiss: function () {
+                    console.log("Razorpay checkout closed");
+                }
+            }
+        };
+
+        const razorpay = new Razorpay(options);
+
+        razorpay.on("payment.failed", function (response) {
+            console.log("Payment failed:", response.error);
+            alert(
+                "Payment Failed\n\n" +
+                "Reason: " + response.error.description
+            );
+        });
+
+        razorpay.open();
+    }
+
+</script>
+
+</body>
+</html>

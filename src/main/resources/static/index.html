@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SellerShield - Payment</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .payment-container {
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow:0 10px 30px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+        .brand {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .brand-icon {
+            width: 45px;
+            height: 45px;
+            background: #2563eb;
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .brand-name {
+            font-size: 25px;
+            font-weight: bold;
+            color: #111827;
+        }
+        .subtitle {
+            margin: 5px 0 25px;
+            color: #6b7280;
+            font-size: 13px;
+        }
+        .payment-title {
+            margin: 0;
+            font-size: 22px;
+            color: #111827;
+        }
+        .secure-text {
+            margin: 7px 0 25px;
+            color: #16a34a;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        .customer-box {
+            background: #f8fafc;
+            border: 1px solid #eef0f4;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .customer-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+        #customerName {
+            font-size: 16px;
+            font-weight: bold;
+            color: #111827;
+        }
+        .amount-label {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 10px;
+        }
+        .amount {
+            font-size: 32px;
+            font-weight: bold;
+            color: #111827;
+            margin: 5px 0 20px;
+        }
+        .qr-section {
+            background: #f8fafc;
+            border: 1px solid #eef0f4;
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+        .qr-title {
+            margin: 0 0 15px;
+            font-size: 17px;
+            color: #111827;
+        }
+        .qr-wrapper {
+            background: white;
+            display: inline-flex;
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow:
+                0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+        #qrCode {
+            width: 230px;
+            height: 230px;
+            display: block;
+        }
+        .scan-text {
+            margin: 15px 0 0;
+            color: #475569;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .upi-box {
+            margin-top: 18px;
+            padding: 12px;
+            background: #eff6ff;
+            border-radius: 9px;
+            color: #1e40af;
+            font-size: 13px;
+        }
+        .upi-label {
+            font-weight: bold;
+        }
+        .status-section {
+            margin-top: 22px;
+            padding: 13px;
+            border-radius: 10px;
+        }
+        .status {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .pending {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+        .paid {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+        .error {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        .completed {
+            display: none;
+            padding: 25px;
+            background: #f0fdf4;
+            border-radius: 12px;
+            color: #15803d;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .completed-icon {
+            font-size: 38px;
+            margin-bottom: 8px;
+        }
+        .footer {
+            margin-top: 22px;
+            color: #9ca3af;
+            font-size: 11px;
+        }
+        @media (max-width: 500px) {
+            body {
+                padding: 12px;
+            }
+            .payment-container {
+                padding: 22px 18px;
+            }
+            .brand-name {
+                font-size: 22px;
+            }
+            #qrCode {
+                width: 210px;
+                height: 210px;
+            }
+            .amount {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="payment-container">
+    <div class="brand">
+        <div class="brand-icon">
+            S
+        </div>
+        <div class="brand-name">
+            SellerShield
+        </div>
+    </div>
+    <p class="subtitle">
+        Secure Payment
+    </p>
+    <h2 class="payment-title">
+        Complete Your Payment
+    </h2>
+    <p class="secure-text">
+        🔒 Secure UPI Payment
+    </p>
+    <div class="customer-box">
+        <div class="customer-label">
+            Customer
+        </div>
+        <div id="customerName">
+            Loading...
+        </div>
+    </div>
+    <div class="amount-label">
+        Amount to Pay
+    </div>
+    <div class="amount">
+        ₹<span id="amount">
+            Loading...
+        </span>
+    </div>
+    <div
+        class="qr-section"
+        id="qrSection">
+        <h3 class="qr-title">
+            Scan QR Code to Pay
+        </h3>
+        <div class="qr-wrapper">
+            <img
+                id="qrCode"
+                alt="Payment QR Code">
+        </div>
+        <p class="scan-text">
+            Open your UPI app and scan this QR code
+        </p>
+        <div
+            class="upi-box"
+            id="upiBox"
+            style="display:none;">
+            <span class="upi-label">
+                UPI ID:
+            </span>
+            <span id="upiId">
+                -
+            </span>
+        </div>
+    </div>
+    <div
+        class="completed"
+        id="completedSection">
+        <div class="completed-icon">
+            ✓
+        </div>
+        Payment Completed
+        <div style="
+            margin-top: 7px;
+            font-size: 12px;
+            font-weight: normal;
+        ">
+            Thank you for your payment.
+        </div>
+    </div>
+    <div
+        id="statusSection"
+        class="status-section pending">
+        Payment Status:
+        <span
+            id="paymentStatus"
+            class="status">
+            Loading...
+        </span>
+    </div>
+    <div class="footer">
+        SellerShield © 2026
+    </div>
+</div>
+
+<script>
+    const params =new URLSearchParams(window.location.search);
+    const paymentToken = params.get("token");
+
+    function loadOrder() {
+        if (!paymentToken) {
+            document.getElementById("paymentStatus").textContent ="Payment link is invalid";
+            document.getElementById("statusSection").className ="status-section error";
+            return;
+        }
+        fetch("/order/payment/" + paymentToken)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Order not found");
+            }
+            return response.json();
+        })
+        .then(order => {
+            document.getElementById("customerName").textContent =order.customerName;
+            document.getElementById("amount").textContent =Number(order.amount).toFixed(2);
+            if (order.selectedUpiId) {
+                document.getElementById("upiId").textContent =order.selectedUpiId;
+                document.getElementById("upiBox").style.display ="block";
+            }
+            document.getElementById("paymentStatus").textContent =order.paymentStatus;
+            const statusSection =document.getElementById("statusSection");
+            if (order.paymentStatus === "PAID") {
+                statusSection.className ="status-section paid";
+                document.getElementById("paymentStatus").textContent ="✓ PAID";
+                document.getElementById("qrSection").style.display ="none";
+                document.getElementById("completedSection").style.display ="block";
+            }
+            else {
+                statusSection.className ="status-section pending";
+                document.getElementById("paymentStatus").textContent ="⏳ PENDING";
+                document.getElementById("qrSection").style.display ="block";
+                document.getElementById("completedSection").style.display ="none";
+                if (order.qrCode) {
+                    document.getElementById("qrCode").src ="/order/qr/" +order.qrCode;
+                }
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            document.getElementById("paymentStatus").textContent ="Unable to load payment";
+            document.getElementById("statusSection").className ="status-section error";
+        });
+    }
+    loadOrder();
+    setInterval(loadOrder,3000);
+</script>
+</body>
+</html>
