@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SellerShield - Order Details</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+
+        .container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+
+        /* ================= HEADER ================= */
+
+        .header {
+            background: white;
+            padding: 18px 22px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+        .brand-icon {
+            width: 45px;
+            height: 45px;
+
+            background: #2563eb;
+            color: white;
+
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+
+        .brand-text h1 {
+            margin: 0;
+            font-size: 23px;
+            color: #111827;
+        }
+
+
+        .brand-text p {
+            margin: 4px 0 0;
+
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+
+        /* ================= BACK BUTTON ================= */
+
+        .back-top {
+            background: #f8fafc;
+            border: 1px solid #d1d5db;
+
+            color: #374151;
+
+            padding: 9px 14px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+
+        .back-top:hover {
+            background: #e5e7eb;
+        }
+
+
+        /* ================= MAIN CARD ================= */
+
+        .order-card {
+            background: white;
+
+            border-radius: 16px;
+
+            padding: 30px;
+
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+        }
+
+
+        .title-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+
+        .title-section h2 {
+            margin: 0;
+
+            font-size: 25px;
+
+            color: #111827;
+        }
+
+
+        .order-number {
+            color: #6b7280;
+
+            font-size: 14px;
+        }
+
+
+        /* ================= STATUS ================= */
+
+        .status-badge {
+            padding: 7px 13px;
+
+            border-radius: 20px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+
+        .status-paid {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+
+        .status-pending {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+
+        /* ================= DETAILS ================= */
+
+        .details-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 0 30px;
+
+            border-top: 1px solid #eef0f4;
+        }
+
+
+        .detail {
+            padding: 16px 0;
+
+            border-bottom: 1px solid #eef0f4;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 5px;
+        }
+
+
+        .label {
+            font-size: 12px;
+
+            color: #6b7280;
+
+            font-weight: bold;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.3px;
+        }
+
+
+        .value {
+            font-size: 15px;
+
+            color: #111827;
+
+            word-break: break-word;
+        }
+
+
+        .amount {
+            font-size: 20px;
+
+            font-weight: bold;
+
+            color: #111827;
+        }
+
+
+        /* ================= QR SECTION ================= */
+
+        .qr-section {
+            margin-top: 30px;
+
+            padding: 25px;
+
+            border-radius: 14px;
+
+            background: #f8fafc;
+
+            text-align: center;
+
+            border: 1px solid #eef0f4;
+        }
+
+
+        .qr-section h3 {
+            margin: 0 0 18px;
+
+            font-size: 18px;
+
+            color: #111827;
+        }
+
+
+        .qr-wrapper {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            background: white;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .qr-wrapper img {
+            width: 400px;
+            height: 700px;
+            display: block;
+        }
+
+
+        .payment-completed {
+            color: #15803d;
+
+            font-size: 19px;
+
+            font-weight: bold;
+        }
+
+
+        .payment-completed-icon {
+            font-size: 32px;
+
+            margin-bottom: 8px;
+        }
+
+
+        /* ================= ACTIONS ================= */
+
+        .actions {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 12px;
+
+            margin-top: 28px;
+
+            flex-wrap: wrap;
+        }
+
+
+        button {
+            font-family: Arial, sans-serif;
+        }
+
+
+        .action-btn {
+            border: none;
+
+            padding: 11px 18px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            transition: 0.2s;
+        }
+
+
+        .paid-btn {
+            background: #16a34a;
+
+            color: white;
+        }
+
+
+        .paid-btn:hover {
+            background: #15803d;
+        }
+
+
+        .back-btn {
+            background: #f1f5f9;
+
+            color: #374151;
+
+            border: 1px solid #d1d5db;
+        }
+
+
+        .back-btn:hover {
+            background: #e2e8f0;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 650px) {
+
+            .container {
+                margin: 20px auto;
+                padding: 0 12px;
+            }
+
+
+            .header {
+                padding: 15px;
+            }
+
+
+            .brand-text h1 {
+                font-size: 20px;
+            }
+
+
+            .back-top {
+                display: none;
+            }
+
+
+            .order-card {
+                padding: 20px;
+            }
+
+
+            .title-section {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 10px;
+            }
+
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .qr-wrapper img {
+                width: 350px;
+                height: 350px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="header">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                S
+            </div>
+
+            <div class="brand-text">
+
+                <h1>SellerShield</h1>
+
+                <p>Secure Order Management</p>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="back-top"
+            onclick="goBack()">
+
+            ← Dashboard
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ================= ORDER CARD ================= -->
+
+    <div class="order-card">
+
+
+        <div class="title-section">
+
+            <div>
+
+                <h2>Order Details</h2>
+
+                <div class="order-number">
+                    Order #<span id="orderId">Loading...</span>
+                </div>
+
+            </div>
+
+
+            <div
+                id="statusBadge"
+                class="status-badge">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================= DETAILS ================= -->
+
+        <div class="details-grid">
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Customer Name
+                </span>
+
+                <span
+                    class="value"
+                    id="customerName">
+
+                    Loading...
+
+                </span>
+
+            </div>
+
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Phone Number
+                </span>
+
+                <span
+                    class="value"
+                    id="phoneNumber">
+
+                    Loading...
+
+                </span>
+
+            </div>
+
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Address
+                </span>
+
+                <span
+                    class="value"
+                    id="address">
+
+                    Loading...
+
+                </span>
+
+            </div>
+
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Amount
+                </span>
+
+                <span
+                    class="value amount">
+
+                    ₹<span id="amount">Loading...</span>
+
+                </span>
+
+            </div>
+
+
+
+            <div class="detail">
+
+                <span class="label">
+                    UPI ID
+                </span>
+
+                <span
+                    class="value"
+                    id="upiId">
+
+                    Loading...
+
+                </span>
+
+            </div>
+
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Created At
+                </span>
+
+                <span
+                    class="value"
+                    id="createdAt">
+
+                    Loading...
+
+                </span>
+
+            </div>
+
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Payment Status
+                </span>
+
+                <span
+                    class="value"
+                    id="paymentStatus">
+
+                    Loading...
+
+                </span>
+
+            </div>
+
+
+
+            <div class="detail">
+
+                <span class="label">
+                    Paid At
+                </span>
+
+                <span
+                    class="value"
+                    id="paidAt">
+
+                    Not paid yet
+
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================= QR ================= -->
+
+        <div class="qr-section" id="qrSection">
+
+        <h3 id="qrTitle">
+            Payment QR Code
+        </h3>
+
+        <div class="qr-wrapper">
+
+        <img id="qrCode" alt="Payment QR Code">
+
+        </div>
+
+        <button
+            id="downloadQrButton"
+            onclick="downloadQr()">
+
+            📥 Download QR
+
+        </button>
+
+        <button
+            id="whatsappButton"
+            onclick="shareOnWhatsApp()">
+
+            📲 Share on WhatsApp
+
+        </button>
+
+    </div>
+
+
+
+        <!-- ================= ACTIONS ================= -->
+
+        <div class="actions">
+
+
+            <button
+                id="markPaidButton"
+                class="action-btn paid-btn"
+                onclick="markAsPaid()">
+
+                ✓ Mark as Paid
+
+            </button>
+
+
+            <button
+                class="action-btn back-btn"
+                onclick="goBack()">
+
+                ← Back to Dashboard
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    const orderId =
+        params.get("orderId");
+
+    function downloadQr() {
+
+        const qrImage = document.getElementById("qrCode");
+
+        if (!qrImage.src) {
+            alert("QR code is not available");
+            return;
+        }
+
+        const link = document.createElement("a");
+
+        link.href = qrImage.src;
+
+        link.download = "SellerShield_Order_" + orderId + "_QR.png";
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+    }
+
+    async function shareOnWhatsApp() {
+
+        const qrImage = document.getElementById("qrCode");
+
+        if (!qrImage.src) {
+            alert("QR code is not available");
+            return;
+        }
+
+        try {
+
+            const response = await fetch(qrImage.src);
+
+            const blob = await response.blob();
+
+            const file = new File([blob],"SellerShield_Order_" + orderId + "_QR.png",
+            {
+                type: blob.type || "image/png"
+            });
+
+            if (
+                navigator.share &&
+                navigator.canShare &&
+                navigator.canShare({ files: [file] })
+            ) {
+
+                await navigator.share({
+                    files: [file]
+                });
+
+            } else {
+
+                alert(
+                    "Direct QR sharing is not supported on this browser. " +
+                    "Please use Download QR and share the image manually."
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(error);
+
+            if (error.name !== "AbortError") {
+                alert("Unable to share QR code");
+            }
+
+        }
+    }
+
+    function loadOrder() {
+
+
+        if (!orderId) {
+
+            document.getElementById(
+                "orderId"
+            ).textContent =
+                "Missing";
+
+            return;
+
+        }
+
+
+
+        fetch("/order/" + orderId)
+
+            .then(response => {
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Order not found"
+                    );
+
+                }
+
+                return response.json();
+
+            })
+
+
+            .then(order => {
+
+
+                document.getElementById(
+                    "orderId"
+                ).textContent =
+                    order.id;
+
+
+                document.getElementById(
+                    "customerName"
+                ).textContent =
+                    order.customerName;
+
+
+                document.getElementById(
+                    "phoneNumber"
+                ).textContent =
+                    order.phoneNumber;
+
+
+                document.getElementById(
+                    "address"
+                ).textContent =
+                    order.address;
+
+
+                document.getElementById(
+                    "amount"
+                ).textContent =
+                    order.amount;
+
+
+                document.getElementById(
+                    "upiId"
+                ).textContent =
+                    order.selectedUpiId;
+
+
+                document.getElementById(
+                    "paymentStatus"
+                ).textContent =
+                    order.paymentStatus;
+
+
+                document.getElementById(
+                    "createdAt"
+                ).textContent =
+                    order.createdAt;
+
+
+
+                /* ================= PAID AT ================= */
+
+                if (order.paidAt) {
+
+                    document.getElementById(
+                        "paidAt"
+                    ).textContent =
+                        order.paidAt;
+
+                }
+
+                else if (
+                    order.paymentStatus === "PAID"
+                ) {
+
+                    document.getElementById(
+                        "paidAt"
+                    ).textContent =
+                        "Payment time not recorded";
+
+                }
+
+                else {
+
+                    document.getElementById(
+                        "paidAt"
+                    ).textContent =
+                        "Not paid yet";
+
+                }
+
+
+
+                /* ================= STATUS ================= */
+
+                const statusBadge =
+                    document.getElementById(
+                        "statusBadge"
+                    );
+
+
+                if (
+                    order.paymentStatus === "PAID"
+                ) {
+
+                    statusBadge.textContent =
+                        "✓ PAID";
+
+                    statusBadge.className =
+                        "status-badge status-paid";
+
+
+                    document.getElementById(
+                        "paymentStatus"
+                    ).style.color =
+                        "#15803d";
+
+                }
+
+                else {
+
+                    statusBadge.textContent =
+                        "⏳ PENDING";
+
+                    statusBadge.className =
+                        "status-badge status-pending";
+
+
+                    document.getElementById(
+                        "paymentStatus"
+                    ).style.color =
+                        "#c2410c";
+
+                }
+
+
+
+                /* ================= QR ================= */
+
+                if (
+                    order.paymentStatus === "PAID"
+                ) {
+
+                    document.getElementById(
+                        "qrCode"
+                    ).style.display =
+                        "none";
+
+
+                    document.getElementById(
+                        "qrSection"
+                    ).innerHTML = `
+
+                        <div class="payment-completed">
+
+                            <div class="payment-completed-icon">
+                                ✓
+                            </div>
+
+                            Payment Completed
+
+                        </div>
+
+                    `;
+
+
+                    document.getElementById(
+                        "markPaidButton"
+                    ).style.display =
+                        "none";
+
+                }
+
+                else {
+
+                    if (order.qrCode) {
+
+                        document.getElementById("qrCode").src =order.qrCode;
+
+                    }
+
+                }
+
+            })
+
+
+            .catch(error => {
+
+                console.error(error);
+
+                document.getElementById(
+                    "customerName"
+                ).textContent =
+                    "Unable to load order";
+
+            });
+
+    }
+
+
+
+    /* ================= BACK ================= */
+
+    function goBack() {
+
+        window.location.href =
+            "/dashboard.html";
+
+    }
+
+
+
+    /* ================= MARK AS PAID ================= */
+
+    function markAsPaid() {
+
+
+        fetch(
+            "/order/" +
+            orderId +
+            "/paid",
+            {
+                method: "PUT"
+            }
+        )
+
+
+        .then(response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to mark payment as paid"
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+
+        .then(order => {
+
+
+            alert(
+                "Payment marked as PAID"
+            );
+
+
+            document.getElementById(
+                "paymentStatus"
+            ).textContent =
+                order.paymentStatus;
+
+
+            document.getElementById(
+                "paymentStatus"
+            ).style.color =
+                "#15803d";
+
+
+            document.getElementById(
+                "paidAt"
+            ).textContent =
+                order.paidAt
+                ? order.paidAt
+                : "Payment time not recorded";
+
+
+            document.getElementById(
+                "statusBadge"
+            ).textContent =
+                "✓ PAID";
+
+
+            document.getElementById(
+                "statusBadge"
+            ).className =
+                "status-badge status-paid";
+
+
+            document.getElementById(
+                "markPaidButton"
+            ).style.display =
+                "none";
+
+
+            document.getElementById(
+                "qrSection"
+            ).innerHTML = `
+
+                <div class="payment-completed">
+
+                    <div class="payment-completed-icon">
+                        ✓
+                    </div>
+
+                    Payment Completed
+
+                </div>
+
+            `;
+
+        })
+
+
+        .catch(error => {
+
+            console.error(error);
+
+            alert(
+                "Failed to update payment status"
+            );
+
+        });
+
+    }
+
+
+
+    loadOrder();
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SellerShield Dashboard</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+
+        .container {
+            max-width: 1250px;
+            margin: auto;
+            padding: 30px;
+        }
+
+
+        /* ================= HEADER ================= */
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 20px 25px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            margin-bottom: 30px;
+        }
+
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+        .brand-icon {
+            width: 45px;
+            height: 45px;
+            background: #2563eb;
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+
+        .brand-text h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #111827;
+        }
+
+
+        .brand-text p {
+            margin: 4px 0 0;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+
+        .logout-btn {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+
+        .logout-btn:hover {
+            background: #fee2e2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+
+
+        /* ================= PAGE TITLE ================= */
+
+        .page-title {
+            margin-bottom: 20px;
+        }
+
+
+        .page-title h2 {
+            margin: 0;
+            font-size: 26px;
+            color: #111827;
+        }
+
+
+        .page-title p {
+            margin-top: 6px;
+            color: #6b7280;
+        }
+
+
+        /* ================= SUMMARY CARDS ================= */
+
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            border: 1px solid #eef0f4;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.09);
+        }
+
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        .card h3 {
+            margin: 0;
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+
+        .blue-icon {
+            background: #eff6ff;
+        }
+
+
+        .orange-icon {
+            background: #fff7ed;
+        }
+
+
+        .green-icon {
+            background: #f0fdf4;
+        }
+
+
+        .purple-icon {
+            background: #faf5ff;
+        }
+
+
+        .card h2 {
+            margin: 18px 0 0;
+            font-size: 28px;
+            color: #111827;
+        }
+
+
+        /* ================= ORDERS SECTION ================= */
+
+        .orders-section {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        }
+
+
+        .orders-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+
+        .orders-header h2 {
+            margin: 0;
+            font-size: 22px;
+            color: #111827;
+        }
+
+
+        .search-box {
+            position: relative;
+            width: 320px;
+        }
+
+
+        .search-box input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+        }
+
+
+        .search-box input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+
+        /* ================= TABLE ================= */
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 850px;
+        }
+
+
+        th {
+            background: #f8fafc;
+            color: #475569;
+            font-size: 13px;
+            font-weight: bold;
+            padding: 15px 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+
+        td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #eef0f4;
+            text-align: center;
+            font-size: 14px;
+        }
+
+
+        tbody tr {
+            transition: background 0.2s;
+        }
+
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+
+        /* ================= STATUS ================= */
+
+        .paid {
+            font-weight: bold;
+            color: #15803d;
+        }
+
+
+        .pending {
+            font-weight: bold;
+            color: #c2410c;
+        }
+
+
+        /* ================= BUTTONS ================= */
+
+        button {
+            font-family: Arial, sans-serif;
+        }
+
+
+        .action-btn {
+            border: none;
+            padding: 8px 12px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 2px;
+            transition: 0.2s;
+        }
+
+        .payment-account-btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            background: #f3e8ff;
+            color: #7e22ce;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .payment-account-btn:hover {
+            background: #e9d5ff;
+        }
+
+        .delete-btn {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .delete-btn:hover {
+            background: #fecaca;
+        }
+
+
+        .view-btn {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+
+        .view-btn:hover {
+            background: #dbeafe;
+        }
+
+
+        .paid-btn {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+
+        .paid-btn:hover {
+            background: #bbf7d0;
+        }
+
+
+        .qr-btn {
+            background: #f3e8ff;
+            color: #7e22ce;
+        }
+
+        .copy-btn {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .copy-btn:hover {
+            background: #e0e7ff;
+        }
+
+        .qr-btn:hover {
+            background: #e9d5ff;
+        }
+
+
+        /* ================= EMPTY STATE ================= */
+
+        .empty-message {
+            text-align: center;
+            padding: 35px;
+            color: #9ca3af;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 900px) {
+
+            .summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .container {
+                padding: 15px;
+            }
+
+
+            .header {
+                padding: 15px;
+            }
+
+
+            .brand-text h1 {
+                font-size: 20px;
+            }
+
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+
+            .orders-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+
+            .search-box {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="header">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                S
+            </div>
+
+            <div class="brand-text">
+
+                <h1>SellerShield</h1>
+
+                <p>Secure Seller Dashboard</p>
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="logout-btn"
+            onclick="logout()">
+
+            🚪 Logout
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ================= PAGE TITLE ================= -->
+
+    <div class="page-title">
+
+        <h2>Dashboard Overview</h2>
+
+        <p>
+            Monitor orders, payments and transactions
+        </p>
+
+    </div>
+
+
+
+    <!-- ================= SUMMARY ================= -->
+
+    <div class="summary">
+
+
+        <div class="card">
+
+            <div class="card-top">
+
+                <h3>Total Orders</h3>
+
+                <div class="card-icon blue-icon">
+                    📦
+                </div>
+
+            </div>
+
+            <h2 id="totalOrders">
+                0
+            </h2>
+
+        </div>
+
+
+
+        <div class="card">
+
+            <div class="card-top">
+
+                <h3>Pending Payments</h3>
+
+                <div class="card-icon orange-icon">
+                    ⏳
+                </div>
+
+            </div>
+
+            <h2 id="pendingOrders">
+                0
+            </h2>
+
+        </div>
+
+
+
+        <div class="card">
+
+            <div class="card-top">
+
+                <h3>Paid Orders</h3>
+
+                <div class="card-icon green-icon">
+                    ✓
+                </div>
+
+            </div>
+
+            <h2 id="paidOrders">
+                0
+            </h2>
+
+        </div>
+
+
+
+        <div class="card">
+
+            <div class="card-top">
+
+                <h3>Total Paid Amount</h3>
+
+                <div class="card-icon purple-icon">
+                    ₹
+                </div>
+
+            </div>
+
+            <h2>
+                ₹<span id="paidAmount">0</span>
+            </h2>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ================= ORDERS ================= -->
+
+    <div class="orders-section">
+
+
+        <div class="orders-header">
+
+        <h2>Orders</h2>
+
+        <div style="display: flex; gap: 10px; align-items: center;">
+
+            <button
+                onclick="window.location.href='/create-order.html'"
+                style="padding: 10px 16px;border: none;border-radius: 8px;background: #2563eb;color: white;font-weight: bold;cursor: pointer;
+                ">
+
+                + Create Order
+
+            </button>
+
+            <button
+                class="payment-account-btn"
+                onclick="window.location.href='/payment-accounts.html'">
+
+                ⚙️ Payment Accounts
+
+            </button>
+
+            <div class="search-box">
+
+                <input type="text"id="searchInput"placeholder="🔎  Search Order ID or Customer"onkeyup="searchOrders()">
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Order ID</th>
+
+                        <th>Customer</th>
+
+                        <th>Amount</th>
+
+                        <th>Status</th>
+
+                        <th>Paid At</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="ordersTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+    let allOrders = [];
+
+
+    function loadOrders() {
+
+        fetch("/order/all")
+
+            .then(response => response.json())
+
+            .then(orders => {
+
+                allOrders = orders;
+
+
+                document.getElementById("totalOrders").textContent =
+                    orders.length;
+
+
+                const pendingCount = orders.filter(
+                    order => order.paymentStatus === "PENDING"
+                ).length;
+
+
+                const paidCount = orders.filter(
+                    order => order.paymentStatus === "PAID"
+                ).length;
+
+
+                const paidAmount = orders
+
+                    .filter(order => order.paymentStatus === "PAID")
+
+                    .reduce(
+                        (total, order) => total + Number(order.amount),
+                        0
+                    );
+
+
+                document.getElementById("pendingOrders").textContent =
+                    pendingCount;
+
+
+                document.getElementById("paidOrders").textContent =
+                    paidCount;
+
+
+                document.getElementById("paidAmount").textContent =
+                    paidAmount.toFixed(2);
+
+
+
+                const searchText =
+                    document
+                        .getElementById("searchInput")
+                        .value
+                        .toLowerCase();
+
+
+                if (searchText) {
+
+                    searchOrders();
+
+                } else {
+
+                    displayOrders(orders);
+
+                }
+
+            })
+
+            .catch(error => {
+
+                console.error(
+                    "Error loading orders:",
+                    error
+                );
+
+            });
+
+    }
+
+
+
+    function openPaymentPage(orderId) {
+
+        window.location.href =
+            "/order-details.html?orderId=" + orderId;
+
+    }
+
+
+
+    function markAsPaid(orderId) {
+
+        fetch("/order/" + orderId + "/paid", {
+
+            method: "PUT"
+
+        })
+
+        .then(response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to mark payment as paid"
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+        .then(order => {
+
+            alert(
+                "Payment marked as PAID for Order " +
+                order.id
+            );
+
+            loadOrders();
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+            alert(
+                "Failed to update payment status"
+            );
+
+        });
+
+    }
+
+
+
+    function regenerateQr(orderId) {
+
+        fetch(
+            "/order/" +
+            orderId +
+            "/regenerate-qr",
+            {
+                method: "PUT"
+            }
+        )
+
+        .then(response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to regenerate QR"
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+        .then(order => {
+
+            alert(
+                "QR code regenerated successfully"
+            );
+
+            loadOrders();
+
+        })
+
+        .catch(error => {
+
+            console.error(error);
+
+            alert(
+                "Failed to regenerate QR code"
+            );
+
+        });
+
+    }
+
+    function copyPaymentLink(orderId) {
+
+        fetch("/order/payment-link/" + orderId).then(response => {
+
+            if (!response.ok) {
+                throw new Error("Unable to get payment link");
+            }
+
+            return response.text();
+        })
+        .then(paymentUrl => {
+
+            navigator.clipboard.writeText(paymentUrl);
+
+            alert("Payment link copied successfully!");
+        })
+        .catch(error => {
+
+            console.error(error);
+
+            alert("Failed to copy payment link");
+        });
+    }
+
+
+    function displayOrders(orders) {
+
+        const table =
+            document.getElementById("ordersTable");
+
+
+        table.innerHTML = "";
+
+
+        if (orders.length === 0) {
+
+            table.innerHTML = `
+                <tr>
+                    <td colspan="6" class="empty-message">
+                        No orders found
+                    </td>
+                </tr>
+            `;
+
+            return;
+
+        }
+
+
+        orders.forEach(order => {
+
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+                    <strong>#${order.id}</strong>
+                </td>
+
+                <td>
+                    ${order.customerName}
+                </td>
+
+                <td>
+                    <strong>₹${order.amount}</strong>
+                </td>
+
+                <td class="${order.paymentStatus.toLowerCase()}">
+
+                    ${
+                        order.paymentStatus === "PAID"
+                        ? "✓ PAID"
+                        : "⏳ PENDING"
+                    }
+
+                </td>
+
+
+                <td>
+
+                    ${
+                        order.paidAt
+
+                        ? order.paidAt
+
+                        : order.paymentStatus === "PAID"
+
+                            ? "Payment time not recorded"
+
+                            : "-"
+                    }
+
+                </td>
+
+
+                <td>
+
+
+                    <button
+                        class="action-btn view-btn"
+                        onclick="openPaymentPage(${order.id})">
+
+                        👁 View
+
+                    </button>
+
+                    <button
+                        class="action-btn copy-btn"
+                        onclick="copyPaymentLink(${order.id})">
+
+                        🔗 Copy Link
+
+                    </button>
+
+                    <button
+                        class="action-btn delete-btn"
+                        onclick="deleteOrder(${order.id})">
+
+                        🗑 Delete
+
+                    </button>
+
+
+                    ${
+                        order.paymentStatus === "PENDING"
+
+                        ? `
+
+                            <button
+                                class="action-btn paid-btn"
+                                onclick="markAsPaid(${order.id})">
+
+                                ✓ Mark as Paid
+
+                            </button>
+
+
+                            ${
+                                !order.qrCode
+
+                                ? `
+
+                                    <button
+                                        class="action-btn qr-btn"
+                                        onclick="regenerateQr(${order.id})">
+
+                                        🔄 Regenerate QR
+
+                                    </button>
+
+                                  `
+
+                                : ""
+                            }
+
+                          `
+
+                        : ""
+                    }
+
+
+                </td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        });
+
+    }
+
+    function deleteOrder(orderId) {
+
+        if (!confirm("Are you sure you want to delete Order #" + orderId + "?")) {
+            return;
+        }
+
+        fetch("/order/" + orderId, {
+            method: "DELETE"
+        })
+        .then(response => {
+
+            if (!response.ok) {
+                throw new Error("Unable to delete order");
+            }
+
+            alert("Order deleted successfully");
+
+            loadOrders();
+
+        })
+        .catch(error => {
+
+            console.error(error);
+
+            alert("Failed to delete order");
+
+        });
+    }
+
+
+    function searchOrders() {
+
+
+        const searchText =
+
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+
+        const filteredOrders =
+
+            allOrders.filter(order =>
+
+                order.id
+                    .toString()
+                    .includes(searchText)
+
+                ||
+
+                order.customerName
+                    .toLowerCase()
+                    .includes(searchText)
+
+            );
+
+
+        displayOrders(filteredOrders);
+
+    }
+
+
+
+    function logout() {
+
+        window.location.href =
+            "/logout";
+
+    }
+
+
+    loadOrders();
+
+
+    setInterval(
+        loadOrders,
+        3000
+    );
+
+
+</script>
+
+
+</body>
+
+</html>
