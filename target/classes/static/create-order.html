@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SellerShield - Create Order</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 18px 22px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 45px;
+            height: 45px;
+            background: #2563eb;
+            color: white;
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .brand-text h1 {
+            margin: 0;
+            font-size: 23px;
+            color: #111827;
+        }
+
+        .brand-text p {
+            margin: 4px 0 0;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .back-btn {
+            padding: 9px 14px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+            background: #f8fafc;
+            color: #374151;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        .title {
+            margin-bottom: 25px;
+        }
+
+        .title h2 {
+            margin: 0;
+            font-size: 25px;
+            color: #111827;
+        }
+
+        .title p {
+            margin-top: 7px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+
+            border: none;
+            border-radius: 9px;
+
+            background: #2563eb;
+            color: white;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .generate-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .generate-btn:disabled {
+            background: #93c5fd;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+            margin-top: 18px;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .error {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .success {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                margin: 20px auto;
+                padding: 0 12px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .brand-text h1 {
+                font-size: 20px;
+            }
+
+            .back-btn {
+                display: none;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                S
+            </div>
+
+            <div class="brand-text">
+
+                <h1>SellerShield</h1>
+
+                <p>Secure Order Management</p>
+
+            </div>
+
+        </div>
+
+        <button
+            class="back-btn"
+            onclick="goBack()">
+
+            ← Dashboard
+
+        </button>
+
+    </div>
+
+
+    <!-- CREATE ORDER -->
+
+    <div class="card">
+
+        <div class="title">
+
+            <h2>Create New Order</h2>
+
+            <p>
+                Enter customer and payment details to generate a secure QR code.
+            </p>
+
+        </div>
+
+
+        <form id="orderForm">
+
+
+            <!-- CUSTOMER NAME -->
+
+            <div class="form-group">
+
+                <label for="customerName">
+                    Customer Name
+                </label>
+
+                <input
+                    type="text"
+                    id="customerName"
+                    placeholder="Enter customer name"
+                    required>
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="form-group">
+
+                <label for="phoneNumber">
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="phoneNumber"
+                    placeholder="Enter phone number"
+                    required>
+
+            </div>
+
+
+            <!-- ADDRESS -->
+
+            <div class="form-group">
+
+                <label for="address">
+                    Address
+                </label>
+
+                <textarea
+                    id="address"
+                    placeholder="Enter customer address"
+                    required></textarea>
+
+            </div>
+
+
+            <!-- AMOUNT -->
+
+            <div class="form-group">
+
+                <label for="amount">
+                    Amount
+                </label>
+
+                <input
+                    type="number"
+                    id="amount"
+                    placeholder="Enter amount"
+                    min="1"
+                    step="0.01"
+                    required>
+
+            </div>
+
+
+            <!-- PAYMENT ACCOUNT -->
+
+            <div class="form-group">
+
+                <label for="selectedUpiId">
+                    Payment Account
+                </label>
+
+                <select
+                    id="selectedUpiId"
+                    required
+                    style="
+                        width: 100%;
+                        padding: 12px 14px;
+                        border: 1px solid #d1d5db;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        background: white;
+                    ">
+
+                <option value="">
+                    Select Payment Account
+                </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="generate-btn"
+                id="generateButton">
+
+                Generate QR
+
+            </button>
+
+
+        </form>
+
+
+        <div
+            id="successMessage"
+            class="message success">
+
+            Order created successfully!
+
+        </div>
+
+
+        <div
+            id="errorMessage"
+            class="message error">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const orderForm =
+        document.getElementById("orderForm");
+
+    const generateButton =
+        document.getElementById("generateButton");
+
+    const selectedUpiId =
+    document.getElementById("selectedUpiId");
+
+    function loadPaymentAccounts() {
+
+        fetch("/payment-accounts")
+
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Unable to load payment accounts"
+                    );
+                }
+
+                return response.json();
+
+            })
+
+            .then(accounts => {
+
+                selectedUpiId.innerHTML =
+                    '<option value="">Select Payment Account</option>';
+
+                accounts.forEach(account => {
+
+                    const option =
+                        document.createElement("option");
+
+                    option.value = account.upiId;
+
+                    option.textContent =
+                        account.accountName +
+                        " - " +
+                        account.upiId;
+
+                    selectedUpiId.appendChild(option);
+
+                });
+
+            })
+
+            .catch(error => {
+
+            console.error(error);
+
+            selectedUpiId.innerHTML =
+                '<option value="">Unable to load accounts</option>';
+
+        });
+
+    }
+
+    loadPaymentAccounts();
+
+    orderForm.addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+
+        generateButton.disabled = true;
+
+        generateButton.textContent =
+            "Creating Order...";
+
+
+        const order = {
+
+            customerName:
+                document.getElementById("customerName").value.trim(),
+
+            phoneNumber:
+                document.getElementById("phoneNumber").value.trim(),
+
+            address:
+                document.getElementById("address").value.trim(),
+
+            amount:
+                Number(document.getElementById("amount").value),
+
+            selectedUpiId:
+                document.getElementById("selectedUpiId").value.trim()
+
+        };
+
+
+        fetch("/order/create", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(order)
+
+        })
+
+
+        .then(response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Unable to create order"
+                );
+
+            }
+
+            return response.json();
+
+        })
+
+
+        .then(order => {
+
+            document.getElementById(
+                "successMessage"
+            ).style.display = "block";
+
+            document.getElementById(
+                "successMessage"
+            ).textContent =
+                "Order #" + order.id +
+                " created successfully!";
+
+
+            /*
+             * For now we will redirect to
+             * the Order Details page.
+             *
+             * The QR is already generated
+             * by the backend.
+             */
+
+            setTimeout(function() {
+
+                window.location.href =
+                    "/order-details.html?orderId=" +
+                    order.id;
+
+            }, 800);
+
+        })
+
+
+        .catch(error => {
+
+            console.error(error);
+
+
+            document.getElementById(
+                "errorMessage"
+            ).style.display = "block";
+
+
+            document.getElementById(
+                "errorMessage"
+            ).textContent =
+                error.message;
+
+
+            generateButton.disabled = false;
+
+            generateButton.textContent =
+                "Generate QR";
+
+        });
+
+    });
+
+
+    function goBack() {
+
+        window.location.href =
+            "/dashboard.html";
+
+    }
+
+</script>
+
+</body>
+
+</html>
