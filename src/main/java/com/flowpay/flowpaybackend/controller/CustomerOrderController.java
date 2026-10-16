@@ -3,15 +3,18 @@ package com.flowpay.flowpaybackend.controller;
 import com.flowpay.flowpaybackend.entity.CustomerOrder;
 import com.flowpay.flowpaybackend.service.CustomerOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import com.flowpay.flowpaybackend.entity.Seller;
 import com.flowpay.flowpaybackend.repository.SellerRepository;
 import org.springframework.security.core.Authentication;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/order")
@@ -88,17 +91,6 @@ public class CustomerOrderController {
         return customerOrderService.getCustomerPaymentUrl(id);
     }
 
-    @GetMapping("/qr/{fileName}")
-    public ResponseEntity<Resource> getQrCode(@PathVariable String fileName) {
-        Resource resource = new FileSystemResource("qrcodes/" + fileName);
-
-        if (!resource.exists()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/png").body(resource);
-    }
-
     @PutMapping("/{id}/regenerate-qr")
     public CustomerOrder regenerateQrCode(@PathVariable Long id) throws Exception {
         return customerOrderService.regenerateQrCode(id);
@@ -116,5 +108,30 @@ public class CustomerOrderController {
         }
 
         customerOrderService.deleteOrder(id, seller);
+    }
+
+    @GetMapping("/qr/{fileName}")
+    public ResponseEntity<Resource> getQrCode(
+        @PathVariable String fileName) throws IOException {
+
+    Path qrDirectory = Paths.get("qrcodes")
+        .toAbsolutePath()
+        .normalize();
+
+    Path imagePath = qrDirectory.resolve(fileName).normalize();
+
+    if (!imagePath.startsWith(qrDirectory)) {
+        return ResponseEntity.badRequest().build();
+    }
+
+    Resource resource = new FileSystemResource(imagePath);
+
+    if (!resource.exists() || !resource.isReadable()) {
+        return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok()
+        .contentType(MediaType.IMAGE_JPEG)
+        .body(resource);    
     }
 }
