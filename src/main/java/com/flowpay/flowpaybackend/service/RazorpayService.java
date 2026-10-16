@@ -10,6 +10,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class RazorpayService {
@@ -25,7 +28,7 @@ public class RazorpayService {
     // CREATE RAZORPAY ORDER
     // ============================================================
 
-    public String createRazorpayOrder(Double amount) throws Exception {
+   public String createRazorpayOrder(Double amount) throws Exception {
 
         long amountInPaise = Math.round(amount * 100);
 
@@ -48,41 +51,49 @@ public class RazorpayService {
     // CREATE RAZORPAY UPI QR
     // ============================================================
 
-    public String createRazorpayQr(Double amount, String orderDescription)
-            throws Exception {
+    public String createRazorpayQr(
+        Double amount,
+        String upiId,
+        String sellerName,
+        String orderDescription) throws Exception {
 
-        long amountInPaise = Math.round(amount * 100);
+    long amountInPaise = Math.round(amount * 100);
 
-        String json = "{"
-                + "\"type\":\"upi_qr\","
-                + "\"name\":\"SellerShield Order\","
-                + "\"usage\":\"single_use\","
-                + "\"fixed_amount\":true,"
-                + "\"payment_amount\":" + amountInPaise + ","
-                + "\"description\":\"" + escapeJson(orderDescription) + "\""
-                + "}";
+    String upiLink = "upi://pay"
+            + "?pa=" + java.net.URLEncoder.encode(
+                    upiId, StandardCharsets.UTF_8)
+            + "&pn=" + java.net.URLEncoder.encode(
+                    sellerName, StandardCharsets.UTF_8)
+            + "&am=" + String.format(
+                    java.util.Locale.US, "%.2f", amount)
+            + "&cu=INR"
+            + "&tn=" + java.net.URLEncoder.encode(
+                    orderDescription, StandardCharsets.UTF_8);
 
-        String responseBody = sendRazorpayRequest(
-                "https://api.razorpay.com/v1/payments/qr_codes",
-                json
-        );
+    Path qrFolder = Paths.get("qrcodes");
+    Files.createDirectories(qrFolder);
 
-        System.out.println("Razorpay QR Response:");
-        System.out.println(responseBody);
+    String fileName = "seller_" + System.currentTimeMillis() + ".jpeg";
+    Path qrFile = qrFolder.resolve(fileName);
 
-        String imageUrl = extractValue(responseBody, "image_url");
+    com.google.zxing.MultiFormatWriter writer =
+            new com.google.zxing.MultiFormatWriter();
 
-        if (imageUrl != null) {
-                imageUrl = imageUrl.replace("\\/", "/");
-        }
-
-        if (imageUrl == null || imageUrl.isEmpty()) {
-            throw new RuntimeException(
-                    "Razorpay QR was created but image_url was not returned."
+    com.google.zxing.common.BitMatrix matrix =
+            writer.encode(
+                    upiLink,
+                    com.google.zxing.BarcodeFormat.QR_CODE,
+                    400,
+                    400
             );
-        }
 
-        return imageUrl;
+    com.google.zxing.client.j2se.MatrixToImageWriter.writeToPath(
+            matrix,
+            "JPEG",
+            qrFile
+    );
+
+    return "local|" + fileName;
     }
 
 
@@ -172,7 +183,11 @@ public class RazorpayService {
             return null;
         }
 
-        return json.substring(start, end);
+        return json.substring(start, end).replace("\\/", "/");
+    }
+
+    public String extractQrId(String responseBody) {
+        return extractValue(responseBody, "id");
     }
 
 
