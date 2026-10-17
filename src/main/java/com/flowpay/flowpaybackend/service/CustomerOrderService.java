@@ -59,12 +59,11 @@ public class CustomerOrderService {
         String[] qrDetails = qrResult.split("\\|", 2);
 
         if (qrDetails.length != 2) {
-            throw new RuntimeException("Invalid QR result: " + qrResult);
+            throw new RuntimeException(
+                    "Invalid QR result: " + qrResult
+            );
         }
 
-        order.setRazorpayQrCodeId(
-                "local".equals(qrDetails[0]) ? null : qrDetails[0]
-        );
         order.setQrCode(qrDetails[1]);
 
         return customerOrderRepository.save(order);
@@ -133,12 +132,11 @@ public class CustomerOrderService {
         String[] qrDetails = qrResult.split("\\|", 2);
 
         if (qrDetails.length != 2) {
-            throw new RuntimeException("Invalid QR result: " + qrResult);
+            throw new RuntimeException(
+                    "Invalid QR result: " + qrResult
+            );
         }
 
-        order.setRazorpayQrCodeId(
-                "local".equals(qrDetails[0]) ? null : qrDetails[0]
-        );
         order.setQrCode(qrDetails[1]);
 
         return customerOrderRepository.save(order);
