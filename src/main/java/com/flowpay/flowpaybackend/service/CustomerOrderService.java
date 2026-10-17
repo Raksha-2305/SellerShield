@@ -1,3 +1,4 @@
+
 package com.flowpay.flowpaybackend.service;
 
 import com.flowpay.flowpaybackend.entity.CustomerOrder;
@@ -25,22 +26,17 @@ public class CustomerOrderService {
     @Autowired
     private RazorpayService razorpayService;
 
-
     public CustomerOrder createOrder(
             CustomerOrder order,
             Seller seller) throws Exception {
 
         order.setSeller(seller);
-
         order.setPaymentStatus("PENDING");
 
         String paymentToken = UUID.randomUUID().toString();
         order.setPaymentToken(paymentToken);
-
         order.setCreatedAt(LocalDateTime.now());
 
-
-        // Check selected seller payment account
         PaymentAccount paymentAccount =
                 paymentAccountRepository.findBySellerAndUpiId(
                         seller,
@@ -53,135 +49,124 @@ public class CustomerOrderService {
             );
         }
 
+        String qrResult = razorpayService.createRazorpayQr(
+                order.getAmount(),
+                order.getSelectedUpiId(),
+                seller.getShopName(),
+                "SellerShield Order " + paymentToken
+        );
 
-        // Create Razorpay UPI QR
-        String qrImageUrl =
-                razorpayService.createRazorpayQr(
-                        order.getAmount(),
-                        "FlowPay Order " + paymentToken
-                );
+        String[] qrDetails = qrResult.split("\\|", 2);
 
+        if (qrDetails.length != 2) {
+            throw new RuntimeException("Invalid QR result: " + qrResult);
+        }
 
-        // Save Razorpay QR URL
-        order.setQrCode(qrImageUrl);
-
+        order.setRazorpayQrCodeId(
+                "local".equals(qrDetails[0]) ? null : qrDetails[0]
+        );
+        order.setQrCode(qrDetails[1]);
 
         return customerOrderRepository.save(order);
     }
 
-
     public List<CustomerOrder> getAllOrders(Seller seller) {
-
         return customerOrderRepository.findBySeller(seller);
     }
 
-
     public CustomerOrder getOrderById(Long id) {
-
         return customerOrderRepository
                 .findById(id)
                 .orElse(null);
     }
 
-
-    public CustomerOrder getOrderByPaymentToken(
-            String paymentToken) {
-
+    public CustomerOrder getOrderByPaymentToken(String paymentToken) {
         return customerOrderRepository
                 .findByPaymentToken(paymentToken)
                 .orElse(null);
     }
 
-
-    public CustomerOrder markAsPaid(
-            Long id,
-            Seller seller) {
-
-        CustomerOrder order =
-                customerOrderRepository
-                        .findById(id)
-                        .orElseThrow(
-                                () -> new RuntimeException(
-                                        "Order not found"
-                                )
-                        );
-
+    public CustomerOrder markAsPaid(Long id, Seller seller) {
+        CustomerOrder order = customerOrderRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new RuntimeException("Order not found")
+                );
 
         if (!order.getSeller().getId().equals(seller.getId())) {
-
             throw new RuntimeException(
                     "You cannot update another seller's order"
             );
         }
 
-
         if ("PAID".equals(order.getPaymentStatus())) {
-
             throw new RuntimeException(
                     "Order is already marked as PAID"
             );
         }
 
-
         order.setPaymentStatus("PAID");
-
         order.setPaidAt(LocalDateTime.now());
-
 
         return customerOrderRepository.save(order);
     }
-
 
     public CustomerOrder regenerateQrCode(Long id)
             throws Exception {
 
-        CustomerOrder order =
-                customerOrderRepository
-                        .findById(id)
-                        .orElseThrow(
-                                () -> new RuntimeException(
-                                        "Order not found"
-                                )
-                        );
-
-
-        String qrImageUrl =
-                razorpayService.createRazorpayQr(
-                        order.getAmount(),
-                        "FlowPay Order " +
-                                order.getPaymentToken()
+        CustomerOrder order = customerOrderRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new RuntimeException("Order not found")
                 );
 
+        Seller seller = order.getSeller();
+        String paymentToken = order.getPaymentToken();
 
-        order.setQrCode(qrImageUrl);
+        String qrResult = razorpayService.createRazorpayQr(
+                order.getAmount(),
+                order.getSelectedUpiId(),
+                seller.getShopName(),
+                "SellerShield Order " + paymentToken
+        );
 
+        String[] qrDetails = qrResult.split("\\|", 2);
+
+        if (qrDetails.length != 2) {
+            throw new RuntimeException("Invalid QR result: " + qrResult);
+        }
+
+        order.setRazorpayQrCodeId(
+                "local".equals(qrDetails[0]) ? null : qrDetails[0]
+        );
+        order.setQrCode(qrDetails[1]);
 
         return customerOrderRepository.save(order);
     }
 
-
     public String getCustomerPaymentUrl(Long id) {
+        CustomerOrder order = customerOrderRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new RuntimeException("Order not found")
+                );
 
-        CustomerOrder order =
-                customerOrderRepository
-                        .findById(id)
-                        .orElseThrow(
-                                () -> new RuntimeException(
-                                        "Order not found"
-                                )
-                        );
-
-
-        return "http://localhost:8080/?token="
-                + order.getPaymentToken();
+        return "https://unwelcome-unison-uncross.ngrok-free.dev/payment.html?orderId="
+                + order.getRazorpayOrderId()
+                + "&amount=" + order.getAmount();
     }
 
     public void deleteOrder(Long id, Seller seller) {
-
-        CustomerOrder order = customerOrderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        CustomerOrder order = customerOrderRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new RuntimeException("Order not found")
+                );
 
         if (!order.getSeller().getId().equals(seller.getId())) {
-            throw new RuntimeException("You cannot delete another seller's order");
+            throw new RuntimeException(
+                    "You cannot delete another seller's order"
+            );
         }
 
         customerOrderRepository.delete(order);
