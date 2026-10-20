@@ -51,51 +51,74 @@ public class RazorpayService {
     // CREATE RAZORPAY UPI QR
     // ============================================================
 
-    public String createRazorpayQr(
+    
+public String createRazorpayQr(
         Double amount,
         String upiId,
         String sellerName,
         String orderDescription) throws Exception {
 
+    if (amount == null || amount <= 0) {
+        throw new IllegalArgumentException("Amount must be greater than zero");
+    }
+
     long amountInPaise = Math.round(amount * 100);
 
-    String upiLink = "upi://pay"
-            + "?pa=" + java.net.URLEncoder.encode(
-                    upiId, StandardCharsets.UTF_8)
-            + "&pn=" + java.net.URLEncoder.encode(
-                    sellerName, StandardCharsets.UTF_8)
-            + "&am=" + String.format(
-                    java.util.Locale.US, "%.2f", amount)
-            + "&cu=INR"
-            + "&tn=" + java.net.URLEncoder.encode(
-                    orderDescription, StandardCharsets.UTF_8);
+    String json = "{"
+            + "\"type\":\"upi_qr\","
+            + "\"name\":\"" + escapeJson(sellerName) + "\","
+            + "\"usage\":\"single_use\","
+            + "\"fixed_amount\":true,"
+            + "\"payment_amount\":" + amountInPaise + ","
+            + "\"description\":\"" + escapeJson(orderDescription) + "\""
+            + "}";
 
+    String responseBody = sendRazorpayRequest(
+            "https://api.razorpay.com/v1/payments/qr_codes",
+            json
+    );
+
+    String qrId = extractValue(responseBody, "id");
+    String imageUrl = extractValue(responseBody, "image_url");
+    System.out.println("Razorpay QR image URL: " + imageUrl);
+
+    if (qrId == null || imageUrl == null) {
+        throw new RuntimeException(
+                "Razorpay QR response missing id or image_url: "
+                        + responseBody
+        );
+    }
+
+    // Download the QR image for the existing app's QR display flow.
     Path qrFolder = Paths.get("qrcodes");
     Files.createDirectories(qrFolder);
 
-    String fileName = "seller_" + System.currentTimeMillis() + ".jpeg";
-    Path qrFile = qrFolder.resolve(fileName);
+    String fileName = "razorpay_" + qrId + ".png";
+    Path qrFile = qrFolder.resolve(fileName).normalize();
 
-    com.google.zxing.MultiFormatWriter writer =
-            new com.google.zxing.MultiFormatWriter();
+    HttpRequest imageRequest = HttpRequest.newBuilder()
+            .uri(URI.create(imageUrl))
+            .GET()
+            .build();
 
-    com.google.zxing.common.BitMatrix matrix =
-            writer.encode(
-                    upiLink,
-                    com.google.zxing.BarcodeFormat.QR_CODE,
-                    400,
-                    400
+    HttpResponse<byte[]> imageResponse =
+            HttpClient.newHttpClient().send(
+                    imageRequest,
+                    HttpResponse.BodyHandlers.ofByteArray()
             );
 
-    com.google.zxing.client.j2se.MatrixToImageWriter.writeToPath(
-            matrix,
-            "JPEG",
-            qrFile
-    );
-
-    return "local|" + fileName;
+    if (imageResponse.statusCode() < 200
+            || imageResponse.statusCode() >= 300) {
+        throw new RuntimeException(
+                "Unable to download Razorpay QR image"
+        );
     }
 
+        Files.write(qrFile, imageResponse.body());
+
+    // Format: local|filename|razorpayQrCodeId
+        return "local|" + fileName + "|" + qrId;
+    }
 
     // ============================================================
     // COMMON RAZORPAY API REQUEST
