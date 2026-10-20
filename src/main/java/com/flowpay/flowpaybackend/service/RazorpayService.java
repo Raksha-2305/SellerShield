@@ -101,11 +101,15 @@ public String createRazorpayQr(
             .GET()
             .build();
 
+    HttpClient imageClient = HttpClient.newBuilder()
+        .followRedirects(HttpClient.Redirect.NORMAL)
+        .build();
+
     HttpResponse<byte[]> imageResponse =
-            HttpClient.newHttpClient().send(
-                    imageRequest,
-                    HttpResponse.BodyHandlers.ofByteArray()
-            );
+        imageClient.send(
+                imageRequest,
+                HttpResponse.BodyHandlers.ofByteArray()
+        );
 
     if (imageResponse.statusCode() < 200
         || imageResponse.statusCode() >= 300) {
