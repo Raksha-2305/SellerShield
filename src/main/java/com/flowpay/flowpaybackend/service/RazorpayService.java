@@ -108,11 +108,13 @@ public String createRazorpayQr(
             );
 
     if (imageResponse.statusCode() < 200
-            || imageResponse.statusCode() >= 300) {
+        || imageResponse.statusCode() >= 300) {
         throw new RuntimeException(
-                "Unable to download Razorpay QR image"
+            "Unable to download Razorpay QR image. Status: "
+                    + imageResponse.statusCode()
+                    + ", URL: " + imageUrl
         );
-    }
+     }
 
         Files.write(qrFile, imageResponse.body());
 
