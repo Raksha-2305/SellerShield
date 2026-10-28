@@ -120,7 +120,19 @@ public String createRazorpayQr(
         );
      }
 
+     String contentType = imageResponse.headers()
+        .firstValue("Content-Type")
+        .orElse("");
+
+     if (!contentType.startsWith("image/")) {
+        throw new RuntimeException(
+            "Razorpay URL did not return an image. Content-Type: "
+                    + contentType
+        );
+     }
+
         Files.write(qrFile, imageResponse.body());
+        System.out.println("QR file saved: " + qrFile.toAbsolutePath());
 
     // Format: local|filename|razorpayQrCodeId
         return "local|" + fileName + "|" + qrId;
@@ -168,7 +180,6 @@ public String createRazorpayQr(
                         request,
                         HttpResponse.BodyHandlers.ofString()
                 );
-
         System.out.println(
                 "Razorpay HTTP Status: "
                         + response.statusCode()
